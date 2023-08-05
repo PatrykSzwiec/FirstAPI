@@ -19,7 +19,7 @@ const db = {
   ],
 
   seats: [
-    { id: 1, day: 1, seat: 13, client: 'Amanda Doe', email: 'amandadoe@example.com' },
+    { id: 1, day: 1, seat: 14, client: 'Amanda Doe', email: 'amandadoe@example.com' },
     { id: 2, day: 1, seat: 21, client: 'Curtis Johnson', email: 'curtisj@example.com'  },
     { id: 3, day: 1, seat: 11, client: 'Felix McManara', email: 'felxim98@example.com'  },
     { id: 4, day: 1, seat: 26, client: 'Fauna Keithrins', email: 'mefauna312@example.com'  },

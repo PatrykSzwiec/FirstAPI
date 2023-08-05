@@ -25,35 +25,7 @@ export const errorRequest = payload => ({ payload, type: ERROR_REQUEST });
 export const loadSeats = payload => ({ payload, type: LOAD_SEATS });
 export const addSeat = payload => ({ payload, type: ADD_SEAT });
 
-
-const REFRESH_INTERVAL = 120000 ; // 2 minutes in milliseconds
-
-let refreshIntervalId = null;
 /* THUNKS */
-
-// Function to refresh seats data
-export const refreshSeats = () => {
-  return async (dispatch) => {
-    try {
-      let res = await axios.get(`${API_URL}/seats`);
-      dispatch(loadSeats(res.data));
-    } catch (e) {
-      console.error('Error refreshing seats:', e.message);
-    }
-  };
-};
-
-// Function to start the refresh interval
-export const startRefreshInterval = (dispatch) => {
-  refreshIntervalId = setInterval(() => {
-    dispatch(refreshSeats());
-  }, REFRESH_INTERVAL);
-};
-
-// Function to clear the refresh interval
-export const clearRefreshInterval = () => {
-  clearInterval(refreshIntervalId);
-};
 
 export const loadSeatsRequest = () => {
   return async dispatch => {
@@ -62,6 +34,7 @@ export const loadSeatsRequest = () => {
     try {
 
       let res = await axios.get(`${API_URL}/seats`);
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       dispatch(loadSeats(res.data));
       dispatch(endRequest({ name: 'LOAD_SEATS' }));
 
@@ -79,6 +52,7 @@ export const addSeatRequest = (seat) => {
     try {
 
       let res = await axios.post(`${API_URL}/seats`, seat);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       dispatch(addSeat(res));
       dispatch(endRequest({ name: 'ADD_SEAT' }));
 
