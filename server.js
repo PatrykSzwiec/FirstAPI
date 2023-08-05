@@ -16,19 +16,19 @@ app.use(express.urlencoded({ extended: true }));
 
 // GET__________________________________________________________________________________________
 
-// get every element from db
+// get every testimonials element from db
 app.get('/testimonials', (req, res) => {
   res.json(db.testimonials);
 });
 
-// get random element from db 
+// get random testimonials element from db 
 app.get('/testimonials/random', (req, res) => {
   const randomIndex = Math.floor(Math.random() * db.testimonials.length);
   const randomTestimonial = db.testimonials[randomIndex];
   res.json(randomTestimonial);
 });
 
-// get element from db which id is selected
+// get testimonials element from db which id is selected
 app.get('/testimonials/:id', (req, res) => {
   const { id } = req.params;
   const testimonial = db.testimonials.find((item) =>  item.id.toString() === id);
@@ -36,6 +36,20 @@ app.get('/testimonials/:id', (req, res) => {
     res.json(testimonial);
   } else {
     res.status(404).json({ message: 'Testimonial not found'});
+  }
+});
+
+app.get('/concerts', (req, res) => {
+  res.json(db.concerts);
+});
+
+app.get('/concerts/:id', (req, res) => {
+  const { id } = req.params;
+  const concert = db.concerts.find((item) => item.id.toString() === id);
+  if(concert) {
+    res.json(concert);
+  } else {
+    res.status(404).json({ message: 'Concert not found'});
   }
 });
 
@@ -55,6 +69,24 @@ app.post('/testimonials', (req, res) => {
   }
 });
 
+app.post('/concerts', (req, res) => {
+  const { performer, genre, price, day, image} = req.body;
+  if (performer && genre && price && day && image) {
+    const newConcert = {
+      id: uuidv4(),
+      performer,
+      genre,
+      price,
+      day,
+      image,
+    };
+    db.concerts.push(newConcert);
+    res.json({ message: 'OK'});
+  } else {
+    res.status(400).json({ message: 'Bad Request - all fields required' });
+  }
+});
+
 // PUT__________________________________________________________________________________________
 app.put('/testimonials/:id', (req, res) => {
   const { id } = req.params;
@@ -63,10 +95,24 @@ app.put('/testimonials/:id', (req, res) => {
   const testimonialIndex = db.testimonials.findIndex((item) => item.id.toString() === id);
 
   if (testimonialIndex !== -1 && author && text) {
-    db[testimonialIndex] = { ...db.testimonials[testimonialIndex], author, text };
+    db.testimonials[testimonialIndex] = { ...db.testimonials[testimonialIndex], author, text };
     res.json({ message: 'OK' });
   } else {
     res.status(404).json({ message: 'Testimonial not found or missing author and/or text' });
+  }
+});
+
+app.put('/concerts/:id', (req, res) => {
+  const { id } = req.params;
+  const { performer, genre, price, day, image } = req.body;
+
+  const concertIndex = db.concerts.findIndex((item) => item.id.toString() === id);
+
+  if(concertIndex !== -1 && performer && genre && price && day && image) {
+    db.concerts[concertIndex] = { ...db.concerts[concertIndex, performer, genre, price, day, image]};
+    res.json({ message: 'OK' })
+  } else {
+    res.status(404).json({ message: 'Concert not found or missing data'});
   }
 });
 
@@ -83,6 +129,18 @@ app.delete('/testimonials/:id', (req, res) => {
   }
 });
 
+app.delete('/concerts/:id', (req, res) => {
+  const { id } = req.params;
+  const concertIndex = db.concerts.findIndex((item) => item.id.toString() === id);
+
+  if(concertIndex !== -1) {
+    db.concerts.splice(concertIndex, 1);
+    res.json({ message: 'OK' });
+  } else {
+    res.status(404).json({ message: 'Concert not found' });
+  }
+});
+/* ------------------------------------------------------------ */
 app.use((req, res) => {
   res.status(404).json({ message: 'Not found...' });
 });
