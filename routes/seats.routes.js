@@ -50,7 +50,7 @@ router.put('/:id', (req, res) => {
 
 router.delete('/:id', (req, res) => {
   const { id } = req.params;
-  const seatIndex = db.concerts.findIndex((item) => item.id.toString() === id);
+  const seatIndex = db.seats.findIndex((item) => item.id.toString() === id);
 
   if(seatIndex !== -1) {
     db.seats.splice(seatIndex, 1);

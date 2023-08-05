@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 
 // import reducers
 import concerts from './concertsRedux';
-import seats from './seatsRedux';
+import seats, { startRefreshInterval, clearRefreshInterval} from './seatsRedux';
 
 // combine reducers
 const rootReducer = combineReducers({
@@ -18,5 +18,13 @@ const store = createStore(
 		window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 	)
 );
+
+// Start the refresh interval when the store is initialized
+startRefreshInterval(store.dispatch);
+
+// Clear the refresh interval when the app is unmounted
+window.addEventListener('beforeunload', () => {
+  clearRefreshInterval();
+});
 
 export default store;

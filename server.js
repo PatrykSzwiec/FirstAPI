@@ -1,12 +1,16 @@
 const express = require('express');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
+const cors = require('cors');
 const db = require('./db');
 const testimonialsRouter = require('./routes/testimonials.routes');
 const concertsRouter = require('./routes/concerts.routes');
 const seatsRouter = require('./routes/seats.routes');
 
 const app = express();
+
+app.use(cors());
+
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
@@ -15,9 +19,9 @@ app.use(express.urlencoded({ extended: true }));
 
 /* ENDPOINTS  */
 
-app.use('/testimonials', testimonialsRouter);
-app.use('/concerts', concertsRouter);
-app.use('/seats', seatsRouter);
+app.use('/api/testimonials', testimonialsRouter);
+app.use('/api/concerts', concertsRouter);
+app.use('/api/seats', seatsRouter);
 
 /* ------------------------------------------------------------ */
 app.use((req, res) => {
