@@ -95,6 +95,10 @@ app.delete('/testimonials/:id', (req, res) => {
   }
 });
 
+app.use((req, res) => {
+  res.status(404).json({ message: 'Not found...' });
+});
+
 // Listening to server on port 8000
 app.listen(8000, () => {
   console.log('Server is running on port: 8000');
