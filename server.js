@@ -16,9 +16,9 @@ app.use(express.urlencoded({ extended: true }));
 
 /* ENDPOINTS  */
 
-app.use('/api', testimonialsRouter);
-app.use('/api', concertsRouter);
-app.use('/api', seatsRouter);
+app.use('/api/testimonials', testimonialsRouter);
+app.use('/api/concerts', concertsRouter);
+app.use('/api/seats', seatsRouter);
 
 app.use(express.static(path.join(__dirname, '/client/build')));
 
