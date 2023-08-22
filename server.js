@@ -10,17 +10,24 @@ const testimonialsRouter = require('./routes/testimonials.routes');
 const concertsRouter = require('./routes/concerts.routes');
 const seatsRouter = require('./routes/seats.routes');
 
-// Use cors middleware with appropriate configuration
-app.use(cors({
+const corsOptions = {
   origin: 'http://localhost:3000', // Replace with the URL of your React app
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
-}));
+};
+
+app.use(cors(corsOptions));
 
 const server = app.listen(process.env.PORT || 8000, () => {
   console.log('Server is running...');
 });
 const io = socket(server);
+
+// Middleware to add the io instance to the request object
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
 
 // Socket.IO event listener for 'connection'
 io.on('connection', (socket) => {
