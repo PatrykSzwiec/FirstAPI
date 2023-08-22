@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
-const db = require('./db');
+const socket = require('socket.io');
 
 const app = express();
 
@@ -10,7 +10,23 @@ const testimonialsRouter = require('./routes/testimonials.routes');
 const concertsRouter = require('./routes/concerts.routes');
 const seatsRouter = require('./routes/seats.routes');
 
-app.use(cors());
+// Use cors middleware with appropriate configuration
+app.use(cors({
+  origin: 'http://localhost:3000', // Replace with the URL of your React app
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+}));
+
+const server = app.listen(process.env.PORT || 8000, () => {
+  console.log('Server is running...');
+});
+const io = socket(server);
+
+// Socket.IO event listener for 'connection'
+io.on('connection', (socket) => {
+  console.log('New socket connected:', socket.id);
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -31,7 +47,3 @@ app.use((req, res) => {
   res.status(404).json({ message: 'Not found...' });
 });
 
-// Listening to server on port 8000
-app.listen(process.env.PORT || 8000, () => {
-  console.log('Server is running on port: 8000');
-});

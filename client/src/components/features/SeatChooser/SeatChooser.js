@@ -1,13 +1,37 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Progress, Alert } from 'reactstrap';
 import { getSeats, loadSeatsRequest, getRequests } from '../../../redux/seatsRedux';
 import './SeatChooser.scss';
+import io from 'socket.io-client';
+
+const getSocketConnectionUrl = () => {
+  if (process.env.NODE_ENV === 'production') {
+    // Use default address for production environment
+    return window.location.origin;
+  } else {
+    // Use localhost:8000 for development environment
+    return 'http://localhost:8000';
+  }
+};
 
 const SeatChooser = ({ chosenDay, chosenSeat, updateSeat }) => {
+  const [socket, setSocket] = useState(null); // State for the socket connection
   const dispatch = useDispatch();
   const seats = useSelector(getSeats);
   const requests = useSelector(getRequests);
+  
+  useEffect(() => {
+    // Conditionally choose the socket connection URL based on environment
+    const socketConnectionUrl = getSocketConnectionUrl();
+    const newSocket = io(socketConnectionUrl);
+    setSocket(newSocket);
+
+    // Clean up the socket connection when the component unmounts
+    return () => {
+      newSocket.disconnect();
+    };
+  }, []);
   
   useEffect(() => {
     dispatch(loadSeatsRequest());
@@ -20,6 +44,7 @@ const SeatChooser = ({ chosenDay, chosenSeat, updateSeat }) => {
 
     return () => clearInterval(interval)
   }, [dispatch, chosenSeat])
+  
 
   const isTaken = (seatId) => {
     return (seats.some(item => (item.seat === seatId && item.day === chosenDay)));
