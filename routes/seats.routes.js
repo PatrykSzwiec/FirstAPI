@@ -40,7 +40,12 @@ router.post('/', (req ,res) => {
     seat: parsedSeat,
     client,
     email };
+
+  // Add the new seat to the db.seats array
   db.seats.push(newSeat);
+
+  
+
   res.status(201).json({ message: 'OK' });
 });
 
