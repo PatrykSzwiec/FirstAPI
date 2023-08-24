@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Progress, Alert } from 'reactstrap';
-import { getSeats, loadSeatsRequest, getRequests } from '../../../redux/seatsRedux';
+import { getSeats, loadSeats, getRequests, loadSeatsRequest } from '../../../redux/seatsRedux';
 import './SeatChooser.scss';
 import io from 'socket.io-client';
 
@@ -30,11 +30,13 @@ const SeatChooser = ({ chosenDay, chosenSeat, updateSeat }) => {
     // Socket.IO event listener for 'connection'
     newSocket.on('connect', () => {
       console.log('New socket connected:', newSocket.id); // Log the socket ID
+
+      newSocket.on('seatsUpdated', handleSeatsUpdated);
     });
 
     const handleSeatsUpdated = (updatedSeats) => {
       console.log('Updated seats:', updatedSeats);
-      dispatch({ type: 'LOAD_SEATS', payload: updatedSeats });
+      dispatch(loadSeats(updatedSeats));
     };
 
     // Clean up the socket connection when the component unmounts
@@ -59,9 +61,6 @@ const SeatChooser = ({ chosenDay, chosenSeat, updateSeat }) => {
   useEffect(() => {
     dispatch(loadSeatsRequest());
   }, [dispatch, chosenSeat]);
-
-  // Log the seats state to check if it's being updated
-  console.log('Seats in component:', seats);
 
   const isTaken = (seatId) => {
     return (seats.some(item => (item.seat === seatId && item.day === chosenDay)));
