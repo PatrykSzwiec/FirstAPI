@@ -26,29 +26,15 @@ const SeatChooser = ({ chosenDay, chosenSeat, updateSeat }) => {
     // Establishing the socket connection
     const socketConnectionUrl = getSocketConnectionUrl();
     const newSocket = io(socketConnectionUrl);
-
+    dispatch(loadSeatsRequest());
+    newSocket.on('seatsUpdated', (seatsData) => dispatch(loadSeats(seatsData)))
     setSocket(newSocket);
-
-    // Socket.IO event listener for 'connection'
-    newSocket.on('connect', () => {
-      console.log('New socket connected:', newSocket.id); // Log the socket ID
-
-      // Event listener for updated seats data
-      newSocket.on('seatsUpdated', handleSeatsUpdated);
-    });
-
-    // Callback for handling updated seats data
-    const handleSeatsUpdated = (updatedSeats) => {
-      console.log('Updated seats:', updatedSeats);
-      dispatch(loadSeats(updatedSeats));
-    };
    
     // Clean up the socket connection when the component unmounts
     return () => {
       newSocket.disconnect();
-      newSocket.off('seatsUpdated', handleSeatsUpdated);
     };
-  }, [dispatch, chosenDay]);
+  }, [dispatch]);
 
   // Function to check if a seat is already taken
   const isTaken = (seatId) => {
