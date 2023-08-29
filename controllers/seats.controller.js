@@ -30,7 +30,6 @@ exports.addSeat = async (req, res) => {
       else { 
         const newSeat = new Seat({ day: day, seat: seat, client: client, email: email});
         await newSeat.save();
-        res.json(newSeat);
         const allSeats = await Seat.find()
         req.io.emit('seatsUpdated', allSeats)
         res.json(newSeat);
@@ -66,6 +65,6 @@ exports.editSeat = async (req, res) => {
       else res.status(404).json({ message: 'NotFound...' })
     }
     catch(err) {
-      res.status(505).json({ message: err })
+      res.status(500).json({ message: err })
     }
   };
