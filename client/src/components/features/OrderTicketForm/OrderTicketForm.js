@@ -1,5 +1,5 @@
 import { Button, Form, FormGroup, Label, Input, Row, Col, Alert, Progress } from 'reactstrap';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addSeatRequest, getRequests, loadSeatsRequest } from '../../../redux/seatsRedux';
 
@@ -18,14 +18,6 @@ const OrderTicketForm = () => {
     seat: ''
   });
   const [isError, setIsError] = useState(false);
-  const [isAgreed, setIsAgreed] = useState(false);
-
-  useEffect(() => {
-    console.log(isAgreed);
-    if (order.client && order.email && order.day && isAgreed) {
-      dispatch(loadSeatsRequest());
-    }
-  }, [order, dispatch, isAgreed]);
 
   const updateSeat = (e, seatId) => {
     e.preventDefault();
@@ -46,7 +38,9 @@ const OrderTicketForm = () => {
     e.preventDefault();
 
     if(order.client && order.email && order.day && order.seat) {
-      dispatch(addSeatRequest(order));
+      console.log('sent')
+      await dispatch(addSeatRequest(order));
+      dispatch(loadSeatsRequest())
       setOrder({
         client: '',
         email: '',
@@ -58,10 +52,6 @@ const OrderTicketForm = () => {
       setIsError(true);
     }
   }
-
-  const updateCheckbox = () => {
-    setIsAgreed(prevIsAgreed => !prevIsAgreed);
-  };
 
   return (
     <Form className="order-ticket-form" onSubmit={submitForm}>
@@ -90,7 +80,7 @@ const OrderTicketForm = () => {
           </FormGroup>
           <FormGroup check>
             <Label check>
-              <Input required type="checkbox" checked={isAgreed} onChange={updateCheckbox}/> I agree with <a href="/terms-and-conditions">Terms and conditions</a> and <a href="/privacy-policy">Privacy Policy</a>.
+              <Input required type="checkbox"/> I agree with <a href="/terms-and-conditions">Terms and conditions</a> and <a href="/privacy-policy">Privacy Policy</a>.
             </Label>
           </FormGroup>
           <Button color="primary" className="mt-3">Submit</Button>
