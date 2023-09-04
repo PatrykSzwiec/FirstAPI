@@ -10,6 +10,16 @@ router.post('/concerts', ConcertController.addCon);
 
 router.put('/concerts/:id', ConcertController.editCon);
 
-router.delete('/concerts/:id', ConcertController.delete)
+router.delete('/concerts/:id', ConcertController.delete);
+
+// SEARCHING ENDPOINTS
+
+router.get('/concerts/performer/:performer', ConcertController.getConByPerformer);
+
+router.get('/concerts/genre/:genre', ConcertController.getConByGenre);
+
+router.get('/concerts/price/:price_min/:price_max', ConcertController.getConByPriceRange);
+
+router.get('/concerts/price/day/:day', ConcertController.getConByDay);
 
 module.exports = router;

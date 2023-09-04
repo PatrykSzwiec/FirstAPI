@@ -58,6 +58,49 @@ exports.editCon = async (req, res) => {
       else res.status(404).json({ message: 'NotFound...' })
     }
     catch(err) {
-      res.status(505).json({ message: err })
+      res.status(500).json({ message: err.message })
     }
   };
+
+  // CONTROLLERS FOR SEARCHING 
+  exports.getConByPerformer = async (req, res) => {
+    try {
+        const performer = req.params.performer;
+        const concerts = await Concert.find({ performer });
+        res.json(concerts);
+    } catch (err) {
+        res.status(500).json({ message: err });
+    }
+};
+
+exports.getConByGenre = async (req, res) => {
+    try {
+        const genre = req.params.genre;
+        const concerts = await Concert.find({ genre });
+        res.json(concerts);
+    } catch (err) {
+        res.status(500).json({ message: err });
+    }
+};
+
+exports.getConByPriceRange = async (req, res) => {
+    try {
+        const { price_min, price_max } = req.params;
+        const concerts = await Concert.find({
+            price: { $gte: parseFloat(price_min), $lte: parseFloat(price_max) }
+        });
+        res.json(concerts);
+    } catch (err) {
+        res.status(500).json({ message: err });
+    }
+};
+
+exports.getConByDay = async (req, res) => {
+    try {
+        const day = req.params.day;
+        const concerts = await Concert.find({ day });
+        res.json(concerts);
+    } catch (err) {
+        res.status(500).json({ message: err });
+    }
+};
