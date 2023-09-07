@@ -8,6 +8,7 @@ import './SeatChooser.scss';
 const SeatChooser = ({ chosenDay, chosenSeat, updateSeat }) => {
   const dispatch = useDispatch();
   const seats = useSelector(getSeats);
+  console.log(seats);
   const requests = useSelector(getRequests);
 
   const [socket, setSocket] = useState('');

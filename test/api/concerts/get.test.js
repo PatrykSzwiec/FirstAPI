@@ -61,17 +61,17 @@ describe('Concert API - GET', () => {
           expect(res.body).to.be.an('array');
         });
 
-        /*it('should return all concerts in chosen :day', async () => {
+        it('should return all concerts in chosen :day', async () => {
           const day = 1;
-          const res = await request(server).get(`/api/concerts/price/day/${day}`);
+          const res = await request(server).get(`/api/concerts/day/${day}`);
           expect(res.status).to.equal(200);
           expect(res.body).to.be.an('array');
-        }); */
+        }); 
 
     });
 
     // After hook to clean up the test data
     after(async () => {
-        await Concert.deleteMany();
+        await Concert.deleteMany(); // zmienić na usunięcie pojedyńczego koncertu
     });
 });
