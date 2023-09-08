@@ -18,7 +18,7 @@ const Concert = ({ performer, price, genre, day, image}) => {
   const SEATS_NUMBERS = 50;
   const takenSeats = seats.filter(seat => seat.day === day).length;
   const freeSeats = SEATS_NUMBERS - takenSeats;
-  console.log(seats);
+  //console.log(seats);
 
   return(
     <article className="concert">
