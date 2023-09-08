@@ -2,9 +2,11 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const socket = require('socket.io');
+const helmet = require('helmet');
 const mongoose = require('mongoose');
 
 const app = express();
+app.use(helmet());
 
 // import routes
 const testimonialsRoutes = require('./routes/testimonials.routes');
